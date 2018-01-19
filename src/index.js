@@ -2,10 +2,16 @@ import Hapi from 'hapi';
 import { graphqlHapi, graphiqlHapi } from 'apollo-server-hapi';
 import { makeExecutableSchema } from 'graphql-tools';
 import { Engine } from 'apollo-engine';
+import { createUserRepository } from 'ptz-user-repository';
+// import UserApp from 'ptz-user-app';
 import config from './config';
+import {
+  authUser,
+  cDecode, cEncode, getAuthToken, saveUser, findUsers, tokenSecret, verifyAuthToken
+} from 'ptz-user-app';
 
-const HOST = 'localhost';
-const PORT = 3003;
+const DB_CONNECTION_STRING = config.database.connectionString
+
 const todos = [
   {
     title: "Create a Todo App",
@@ -18,17 +24,54 @@ const todos = [
     id: 2,
   },
 ];
+
 const typeDefs = `
-  type Query { todos: [Todo] }
+  type Query {
+    todos: [Todo]
+  }
   type Todo { title: String!, author: String!, id:ID! }
+
+  type User {
+    id: ID
+    userName: String!
+    email: String!,
+    displayName: String
+  }
+
+  input CreateUserInput {
+    id: ID
+    userName: String!
+    email: String!,
+    displayName: String,
+    password: String!
+  }
+  
+  type Mutation {
+    createUser(input: CreateUserInput): User
+  }
 `;
 
-// The resolvers
+
 const resolvers = {
-  Query: { todos: () => todos },
+  Query: {
+    todos: () => todos,
+  },
+  Mutation: {
+    createUser: async (root, args) => {
+      const userRepository = await createUserRepository(DB_CONNECTION_STRING, 'users');
+
+      const saveUserArgs = {
+        userArgs: args.input,
+        authedUser: 'user'
+      };
+
+      const resp = await saveUser({ userRepository }, saveUserArgs)
+
+      return resp;
+    }
+  }
 };
 
-// Put together a schema
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
@@ -38,14 +81,13 @@ const schema = makeExecutableSchema({
 const engine = new Engine({
   engineConfig: {
     apiKey: config.optics.api_key,
-    logging: {
-      level: 'DEBUG'   // Engine Proxy logging level. DEBUG, INFO, WARN or ERROR
-    }
   },
   graphqlPort: config.server.port
 });
 
 async function StartServer() {
+  const userRepository = await createUserRepository(DB_CONNECTION_STRING, 'users');
+
   const server = new Hapi.server({
     port: config.server.port,
   });
