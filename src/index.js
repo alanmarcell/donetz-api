@@ -1,6 +1,8 @@
 import Hapi from 'hapi';
-import { graphqlHapi } from 'apollo-server-hapi';
+import { graphqlHapi, graphiqlHapi } from 'apollo-server-hapi';
 import { makeExecutableSchema } from 'graphql-tools';
+import { Engine } from 'apollo-engine';
+import config from './config';
 
 const HOST = 'localhost';
 const PORT = 3003;
@@ -33,10 +35,29 @@ const schema = makeExecutableSchema({
 });
 
 
+const engine = new Engine({
+  engineConfig: {
+    apiKey: config.optics.api_key,
+    logging: {
+      level: 'DEBUG'   // Engine Proxy logging level. DEBUG, INFO, WARN or ERROR
+    }
+  },
+  graphqlPort: config.server.port
+});
+
 async function StartServer() {
   const server = new Hapi.server({
-    host: HOST,
-    port: PORT,
+    port: config.server.port,
+  });
+
+  await server.register({
+    plugin: graphiqlHapi,
+    options: {
+      path: '/graphiql',
+      graphiqlOptions: {
+        endpointURL: '/graphql',
+      },
+    },
   });
 
   await server.register({
@@ -45,6 +66,8 @@ async function StartServer() {
       path: '/graphql',
       graphqlOptions: {
         schema,
+        tracing: true,
+        cacheControl: true
       },
       route: {
         cors: true,
@@ -54,6 +77,8 @@ async function StartServer() {
 
   try {
     await server.start();
+
+    engine.start();
   } catch (err) {
     console.log(`Error while starting server: ${err.message}`);
   }

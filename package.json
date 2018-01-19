@@ -13,7 +13,9 @@
   "author": "Alan Marcell",
   "license": "MIT",
   "dependencies": {
+    "apollo-engine": "^0.8.4",
     "apollo-server-hapi": "^1.3.2",
+    "dotenv": "^4.0.0",
     "graphql": "^0.12.3",
     "graphql-tools": "^2.18.0",
     "hapi": "^17.2.0",

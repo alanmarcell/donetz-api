@@ -3,8 +3,17 @@
 let StartServer = (() => {
   var _ref = _asyncToGenerator(function* () {
     const server = new _hapi2.default.server({
-      host: HOST,
-      port: PORT
+      port: _config2.default.server.port
+    });
+
+    yield server.register({
+      plugin: _apolloServerHapi.graphiqlHapi,
+      options: {
+        path: '/graphiql',
+        graphiqlOptions: {
+          endpointURL: '/graphql'
+        }
+      }
     });
 
     yield server.register({
@@ -12,7 +21,9 @@ let StartServer = (() => {
       options: {
         path: '/graphql',
         graphqlOptions: {
-          schema
+          schema,
+          tracing: true,
+          cacheControl: true
         },
         route: {
           cors: true
@@ -22,6 +33,8 @@ let StartServer = (() => {
 
     try {
       yield server.start();
+
+      engine.start();
     } catch (err) {
       console.log(`Error while starting server: ${err.message}`);
     }
@@ -41,6 +54,12 @@ var _hapi2 = _interopRequireDefault(_hapi);
 var _apolloServerHapi = require('apollo-server-hapi');
 
 var _graphqlTools = require('graphql-tools');
+
+var _apolloEngine = require('apollo-engine');
+
+var _config = require('./config');
+
+var _config2 = _interopRequireDefault(_config);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -71,6 +90,16 @@ const resolvers = {
 const schema = (0, _graphqlTools.makeExecutableSchema)({
   typeDefs,
   resolvers
+});
+
+const engine = new _apolloEngine.Engine({
+  engineConfig: {
+    apiKey: _config2.default.optics.api_key,
+    logging: {
+      level: 'DEBUG' // Engine Proxy logging level. DEBUG, INFO, WARN or ERROR
+    }
+  },
+  graphqlPort: _config2.default.server.port
 });
 
 StartServer();
