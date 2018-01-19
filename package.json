@@ -1,0 +1,27 @@
+{
+  "name": "donetz-api",
+  "version": "0.0.1",
+  "description": "A client to your Donetz",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist",
+    "start:dev": "yarn build:watch & nodemon dist",
+    "build": "babel src -d dist",
+    "build:watch": "yarn build -w"
+  },
+  "author": "Alan Marcell",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server-hapi": "^1.3.2",
+    "graphql": "^0.12.3",
+    "graphql-tools": "^2.18.0",
+    "hapi": "^17.2.0",
+    "happi": "^0.9.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "nodemon": "^1.14.11"
+  }
+}
