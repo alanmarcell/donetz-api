@@ -1,10 +1,8 @@
 'use strict';
 
 let StartServer = (() => {
-  var _ref2 = _asyncToGenerator(function* () {
-    const userRepository = yield (0, _ptzUserRepository.createUserRepository)(DB_CONNECTION_STRING, 'users');
-
-    const server = new _hapi2.default.server({
+  var _ref = _asyncToGenerator(function* () {
+    const server = new _hapi2.default.Server({
       port: _config2.default.server.port
     });
 
@@ -45,7 +43,7 @@ let StartServer = (() => {
   });
 
   return function StartServer() {
-    return _ref2.apply(this, arguments);
+    return _ref.apply(this, arguments);
   };
 })();
 
@@ -59,13 +57,13 @@ var _graphqlTools = require('graphql-tools');
 
 var _apolloEngine = require('apollo-engine');
 
-var _ptzUserRepository = require('ptz-user-repository');
-
 var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
-var _ptzUserApp = require('ptz-user-app');
+var _schema = require('./users/schema');
+
+var _resolver = require('./users/resolver');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -73,73 +71,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 // import UserApp from 'ptz-user-app';
 
 
-const DB_CONNECTION_STRING = _config2.default.database.connectionString;
-
-const todos = [{
-  title: "Create a Todo App",
-  author: 'Polutz',
-  id: 1
-}, {
-  title: 'Create a Todo in this app',
-  author: 'Alan Marcell',
-  id: 2
-}];
-
-const typeDefs = `
-  type Query {
-    todos: [Todo]
-  }
-  type Todo { title: String!, author: String!, id:ID! }
-
-  type User {
-    id: ID
-    userName: String!
-    email: String!,
-    displayName: String
-  }
-
-  input CreateUserInput {
-    id: ID
-    userName: String!
-    email: String!,
-    displayName: String,
-    password: String!
-  }
-  
-  type Mutation {
-    createUser(input: CreateUserInput): User
-  }
-`;
-
-const resolvers = {
-  Query: {
-    todos: () => todos
-  },
-  Mutation: {
-    createUser: (() => {
-      var _ref = _asyncToGenerator(function* (root, args) {
-        const userRepository = yield (0, _ptzUserRepository.createUserRepository)(DB_CONNECTION_STRING, 'users');
-
-        const saveUserArgs = {
-          userArgs: args.input,
-          authedUser: 'user'
-        };
-
-        const resp = yield (0, _ptzUserApp.saveUser)({ userRepository }, saveUserArgs);
-
-        return resp;
-      });
-
-      return function createUser(_x, _x2) {
-        return _ref.apply(this, arguments);
-      };
-    })()
-  }
-};
-
 const schema = (0, _graphqlTools.makeExecutableSchema)({
-  typeDefs,
-  resolvers
+  typeDefs: _schema.typeDefs,
+  resolvers: _resolver.resolvers
 });
 
 const engine = new _apolloEngine.Engine({
