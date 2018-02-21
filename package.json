@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist",
     "start:dev": "yarn build:watch & nodemon dist",
-    "build": "babel src -d dist --copy-files",
+    "build": "rimraf dist && babel src -d dist --copy-files",
     "build:watch": "yarn build -w"
   },
   "author": "Alan Marcell",
@@ -37,6 +37,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "nodemon": "^1.14.11",
-    "ptz-log": "^1.2.1"
+    "ptz-log": "^1.2.1",
+    "rimraf": "^2.6.2"
   }
 }
