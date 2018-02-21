@@ -17,7 +17,7 @@
     "apollo-errors": "^1.5.1",
     "apollo-server-hapi": "^1.3.2",
     "dotenv": "^4.0.0",
-    "graphql": "^0.12.3",
+    "graphql": "^0.13.1",
     "graphql-tools": "^2.18.0",
     "hapi": "^17.2.0",
     "merge-graphql-schemas": "^1.4.0",
