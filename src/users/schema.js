@@ -1,5 +1,5 @@
 
-const typeDefs = `
+export default `
 type Query {
   todos: [Todo]
 }
@@ -25,5 +25,3 @@ type Mutation {
 }
 `;
 
-export default typeDefs;
-export { typeDefs };

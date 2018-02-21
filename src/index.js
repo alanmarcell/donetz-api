@@ -5,8 +5,9 @@ import { Engine } from 'apollo-engine';
 // import UserApp from 'ptz-user-app';
 import config from './config';
 
-import { typeDefs } from './users/schema';
 import { resolvers } from './users/resolver';
+
+import typeDefs from './graphql/typeDefs';
 
 const schema = makeExecutableSchema({
   typeDefs,

@@ -61,9 +61,11 @@ var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
-var _schema = require('./users/schema');
-
 var _resolver = require('./users/resolver');
+
+var _typeDefs = require('./graphql/typeDefs');
+
+var _typeDefs2 = _interopRequireDefault(_typeDefs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -72,7 +74,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 
 var schema = (0, _graphqlTools.makeExecutableSchema)({
-  typeDefs: _schema.typeDefs,
+  typeDefs: _typeDefs2.default,
   resolvers: _resolver.resolvers
 });
 
