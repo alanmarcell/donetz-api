@@ -1,5 +1,3 @@
-
-export default `
 type Query {
   todos: [Todo]
 }
@@ -23,5 +21,3 @@ input CreateUserInput {
 type Mutation {
   createUser(user: CreateUserInput): User
 }
-`;
-

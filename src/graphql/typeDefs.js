@@ -1,11 +1,8 @@
+import { fileLoader, mergeTypes } from 'merge-graphql-schemas';
+import Path from 'path';
 
-import { mergeTypes } from 'merge-graphql-schemas';
+const opts = { recursive: true, extensions: ['.graphql'] };
 
-import userType from '../users/schema';
+const typesArray = fileLoader(Path.join(__dirname, '../'), opts);
 
-
-const types = [
-  userType,
-]
-
-export default mergeTypes(types);
+export default mergeTypes(typesArray);

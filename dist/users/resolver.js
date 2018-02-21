@@ -15,13 +15,13 @@ var _config2 = _interopRequireDefault(_config);
 
 var _core = require('../core');
 
-var _ptzLog = require('ptz-log');
-
 var _Controller = require('./Controller');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+// import { log } from 'ptz-log';
+
 
 var DB_CONNECTION_STRING = _config2.default.database.connectionString;
 var _todos = [{
