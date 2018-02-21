@@ -20,8 +20,10 @@
     "graphql-tools": "^2.18.0",
     "hapi": "^17.2.0",
     "merge-graphql-schemas": "^1.4.0",
+    "mongodb": "^3.0.2",
     "ptz-user-app": "^2.1.1",
-    "ptz-user-repository": "^2.1.3"
+    "ptz-user-repository": "^2.1.3",
+    "ramda": "^0.25.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

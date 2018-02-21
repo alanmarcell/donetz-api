@@ -5,6 +5,8 @@ import {
 } from 'ptz-user-app';
 import config from '../config';
 
+import { save, getDb, getDbCollection, getConnectedDb } from '../core';
+
 const DB_CONNECTION_STRING = config.database.connectionString;
 const todos = [
   {
@@ -25,14 +27,22 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (root, args) => {
-      const userRepository = await createUserRepository(DB_CONNECTION_STRING, 'users');
+
+
+      const db = await getDb(DB_CONNECTION_STRING)
+
+      const UserDb = await getConnectedDb(db, 'donetz_dev');
+
+      console.log(' --- UserDb --- ', UserDb)
+      const userRepository = await getDbCollection(UserDb, 'users');
 
       const saveUserArgs = {
         userArgs: args.input,
         authedUser: 'user',
       };
 
-      const resp = await saveUser({ userRepository }, saveUserArgs);
+      console.log(' --- userRepository --- ', userRepository)
+      const resp = await save(userRepository, saveUserArgs);
 
       return resp;
     },
