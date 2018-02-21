@@ -13,10 +13,19 @@ const getConnectedDb =
 const getDbCollection =
   R.curry((db, collectionName) => db.collection(collectionName));
 
-// const db = getDb(DB_CONNECTION_STRING);
+
+const save = R.curry(async (collection, entity) => {
+  const result = await collection.replaceOne(
+    { _id: entity.id },
+    entity, { upsert: true },
+  );
+
+  return result.ops[0];
+});
 
 export {
   getDb,
   getConnectedDb,
   getDbCollection,
+  save,
 };

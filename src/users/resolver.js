@@ -1,11 +1,8 @@
-import { createUserRepository } from 'ptz-user-repository';
-import {
-  authUser,
-  cDecode, cEncode, getAuthToken, saveUser, findUsers, tokenSecret, verifyAuthToken,
-} from 'ptz-user-app';
+import R from 'ramda';
 import config from '../config';
-
-import { save, getDb, getDbCollection, getConnectedDb } from '../core';
+import { getDb, getDbCollection, getConnectedDb } from '../core';
+import { log } from 'ptz-log';
+import { createUser } from './Controller';
 
 const DB_CONNECTION_STRING = config.database.connectionString;
 const todos = [
@@ -27,23 +24,17 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (root, args) => {
-
-
       const db = await getDb(DB_CONNECTION_STRING)
 
       const UserDb = await getConnectedDb(db, 'donetz_dev');
 
-      console.log(' --- UserDb --- ', UserDb)
       const userRepository = await getDbCollection(UserDb, 'users');
 
-      const saveUserArgs = {
-        userArgs: args.input,
-        authedUser: 'user',
-      };
+      const saveUserArgs = R.merge({
+        createdBy: 'self',
+      }, args.user);
 
-      console.log(' --- userRepository --- ', userRepository)
-      const resp = await save(userRepository, saveUserArgs);
-
+      const resp = await createUser(userRepository, saveUserArgs);
       return resp;
     },
   },

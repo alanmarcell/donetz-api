@@ -4,31 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-const typeDefs = `
-type Query {
-  todos: [Todo]
-}
-type Todo { title: String!, author: String!, id:ID! }
-
-type User {
-  id: ID
-  userName: String!
-  email: String!,
-  displayName: String
-}
-
-input CreateUserInput {
-  id: ID
-  userName: String!
-  email: String!,
-  displayName: String,
-  password: String!
-}
-
-type Mutation {
-  createUser(input: CreateUserInput): User
-}
-`;
+var typeDefs = "\ntype Query {\n  todos: [Todo]\n}\ntype Todo { title: String!, author: String!, id:ID! }\n\ntype User {\n  id: ID\n  name: String!\n  email: String!,\n  userName: String\n}\n\ninput CreateUserInput {\n  id: ID\n  name: String!,\n  email: String!,\n  password: String!\n  userName: String\n}\n\ntype Mutation {\n  createUser(user: CreateUserInput): User\n}\n";
 
 exports.default = typeDefs;
 exports.typeDefs = typeDefs;

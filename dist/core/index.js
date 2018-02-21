@@ -10,7 +10,7 @@ Object.keys(_Controller).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function () {
+    get: function get() {
       return _Controller[key];
     }
   });
@@ -22,7 +22,7 @@ Object.keys(_Repository).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   Object.defineProperty(exports, key, {
     enumerable: true,
-    get: function () {
+    get: function get() {
       return _Repository[key];
     }
   });

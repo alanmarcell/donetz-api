@@ -1,12 +1,15 @@
-import R from 'ramda';
+import { createError } from 'apollo-errors';
+import * as Repository from './Repository';
 
-const save = R.curry(async (collection, entity) => {
-  const result = await collection.replaceOne(
-    { _id: entity.id },
-    entity, { upsert: true },
-  );
+const create = async (collection, entity) => {
+  const repositoryRes = await Repository.save(collection, entity);
 
-  return result.ops[0];
+  return repositoryRes;
+};
+
+const ResourceError = createError('ResourceError', {
+  message: 'Invalid Resource',
 });
 
-export { save };
+export { create, ResourceError };
+

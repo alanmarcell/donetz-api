@@ -1,8 +1,8 @@
 'use strict';
 
-let StartServer = (() => {
+var StartServer = function () {
   var _ref = _asyncToGenerator(function* () {
-    const server = new _hapi2.default.Server({
+    var server = new _hapi2.default.Server({
       port: _config2.default.server.port
     });
 
@@ -21,7 +21,7 @@ let StartServer = (() => {
       options: {
         path: '/graphql',
         graphqlOptions: {
-          schema,
+          schema: schema,
           tracing: true,
           cacheControl: true
         },
@@ -36,16 +36,16 @@ let StartServer = (() => {
 
       engine.start();
     } catch (err) {
-      console.log(`Error while starting server: ${err.message}`);
+      console.log('Error while starting server: ' + err.message);
     }
 
-    console.log(`Server running at: ${server.info.uri}`);
+    console.log('Server running at: ' + server.info.uri);
   });
 
   return function StartServer() {
     return _ref.apply(this, arguments);
   };
-})();
+}();
 
 var _hapi = require('hapi');
 
@@ -71,12 +71,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 // import UserApp from 'ptz-user-app';
 
 
-const schema = (0, _graphqlTools.makeExecutableSchema)({
+var schema = (0, _graphqlTools.makeExecutableSchema)({
   typeDefs: _schema.typeDefs,
   resolvers: _resolver.resolvers
 });
 
-const engine = new _apolloEngine.Engine({
+var engine = new _apolloEngine.Engine({
   engineConfig: {
     apiKey: _config2.default.optics.api_key
   },

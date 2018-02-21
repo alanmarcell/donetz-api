@@ -7,21 +7,21 @@ type Todo { title: String!, author: String!, id:ID! }
 
 type User {
   id: ID
-  userName: String!
+  name: String!
   email: String!,
-  displayName: String
+  userName: String
 }
 
 input CreateUserInput {
   id: ID
-  userName: String!
+  name: String!,
   email: String!,
-  displayName: String,
   password: String!
+  userName: String
 }
 
 type Mutation {
-  createUser(input: CreateUserInput): User
+  createUser(user: CreateUserInput): User
 }
 `;
 

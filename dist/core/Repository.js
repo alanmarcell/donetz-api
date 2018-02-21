@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getDbCollection = exports.getConnectedDb = exports.getDb = undefined;
+exports.save = exports.getDbCollection = exports.getConnectedDb = exports.getDb = undefined;
 
 var _ramda = require('ramda');
 
@@ -21,7 +21,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 // const DB_CONNECTION_STRING = config.database.connectionString;
 
-const getDb = (() => {
+var getDb = function () {
   var _ref = _asyncToGenerator(function* (url) {
     return _mongodb.MongoClient.connect(url);
   });
@@ -29,14 +29,29 @@ const getDb = (() => {
   return function getDb(_x) {
     return _ref.apply(this, arguments);
   };
-})();
+}();
 
-const getConnectedDb = _ramda2.default.curry((db, dbName) => db.db(dbName));
+var getConnectedDb = _ramda2.default.curry(function (db, dbName) {
+  return db.db(dbName);
+});
 
-const getDbCollection = _ramda2.default.curry((db, collectionName) => db.collection(collectionName));
+var getDbCollection = _ramda2.default.curry(function (db, collectionName) {
+  return db.collection(collectionName);
+});
 
-// const db = getDb(DB_CONNECTION_STRING);
+var save = _ramda2.default.curry(function () {
+  var _ref2 = _asyncToGenerator(function* (collection, entity) {
+    var result = yield collection.replaceOne({ _id: entity.id }, entity, { upsert: true });
+
+    return result.ops[0];
+  });
+
+  return function (_x2, _x3) {
+    return _ref2.apply(this, arguments);
+  };
+}());
 
 exports.getDb = getDb;
 exports.getConnectedDb = getConnectedDb;
 exports.getDbCollection = getDbCollection;
+exports.save = save;
