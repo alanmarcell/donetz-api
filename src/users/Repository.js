@@ -26,10 +26,20 @@ const CrateUserRepository = async () => {
       .toArray();
   };
 
+  const getByUserNameOrEmail = userNameOrEmail => {
+    const query = {
+      $or: [{ email: userNameOrEmail },
+        { userName: userNameOrEmail }],
+    };
+
+    return UserCollection.findOne(query);
+  };
+
   const saveUser = save(UserCollection);
 
   return {
     getOtherUsersWithSameUserNameOrEmail,
+    getByUserNameOrEmail,
     saveUser,
   };
 };
