@@ -31,6 +31,11 @@ const resolvers = {
 
       return createUser(saveUserArgs);
     },
+    login: (root, { email, password }) => {
+      const { login } = UserController;
+
+      return login({ email, password });
+    },
   },
 };
 

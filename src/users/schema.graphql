@@ -10,6 +10,10 @@ type User {
   userName: String
 }
 
+type LoginPayload {
+  authorized: Boolean!
+}
+
 input CreateUserInput {
   id: ID
   name: String!,
@@ -20,4 +24,5 @@ input CreateUserInput {
 
 type Mutation {
   createUser(user: CreateUserInput): User
+  login(email: String!, password: String!): LoginPayload
 }

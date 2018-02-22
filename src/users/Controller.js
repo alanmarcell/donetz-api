@@ -25,7 +25,17 @@ const CreateUserController = () => {
     return saveUser(user);
   };
 
-  return { createUser };
+  const login = async (user) => {
+    const {
+      getOtherUsersWithSameUserNameOrEmail,
+    } = await CrateUserRepository();
+
+    const userDb = await getOtherUsersWithSameUserNameOrEmail(user);
+
+    return { authorized: !R.isEmpty(userDb) };
+  };
+
+  return { createUser, login };
 };
 
 export default CreateUserController;
