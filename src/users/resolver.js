@@ -1,10 +1,9 @@
 import R from 'ramda';
-import config from '../config';
-import { getDb, getDbCollection, getConnectedDb } from '../core';
 // import { log } from 'ptz-log';
-import { createUser } from './Controller';
+import CreateUserController from './Controller';
 
-const DB_CONNECTION_STRING = config.database.connectionString;
+const UserController = CreateUserController();
+
 const todos = [
   {
     title: 'Create a Todo App',
@@ -23,19 +22,14 @@ const resolvers = {
     todos: () => todos,
   },
   Mutation: {
-    createUser: async (root, args) => {
-      const db = await getDb(DB_CONNECTION_STRING);
-
-      const UserDb = await getConnectedDb(db, 'donetz_dev');
-
-      const userRepository = await getDbCollection(UserDb, 'users');
+    createUser: (root, args) => {
+      const { createUser } = UserController;
 
       const saveUserArgs = R.merge({
         createdBy: 'self',
       }, args.user);
 
-      const resp = await createUser(userRepository, saveUserArgs);
-      return resp;
+      return createUser(saveUserArgs);
     },
   },
 };

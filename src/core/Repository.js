@@ -2,17 +2,18 @@ import R from 'ramda';
 import { MongoClient } from 'mongodb';
 import config from '../config';
 
-// const DB_CONNECTION_STRING = config.database.connectionString;
+const { dbName, host } = config.database;
 
-const getDb = async url => MongoClient.connect(url);
+const getConnection = async () => MongoClient.connect(host);
 
-const getConnectedDb =
-  R.curry((db, dbName) => db.db(dbName));
+const getDb = connection => connection.db(dbName);
 
+const getConnectedDb = () =>
+  getConnection()
+    .then(getDb);
 
-const getDbCollection =
-  R.curry((db, collectionName) => db.collection(collectionName));
-
+const getCollection = collectionName =>
+  getConnectedDb().then(db => db.collection(collectionName));
 
 const save = R.curry(async (collection, entity) => {
   const result = await collection.replaceOne(
@@ -24,8 +25,8 @@ const save = R.curry(async (collection, entity) => {
 });
 
 export {
-  getDb,
+  getConnection,
   getConnectedDb,
-  getDbCollection,
+  getCollection,
   save,
 };
