@@ -27,6 +27,6 @@ input CreateUserInput {
 }
 
 type Mutation {
-  createUser(user: CreateUserInput): User
+  createUser(user: CreateUserInput): LoginPayload
   login(email: String!, password: String!): LoginPayload
 }

@@ -34,7 +34,9 @@ const CreateUserController = () => {
       return new ResourceError({ message: 'This email are already used by other account' });
     }
 
-    return saveUser(user);
+    const userDb = await saveUser(user);
+
+    return { token: cEncode(userDb) };
   };
 
   const login = async userArgs => {
@@ -49,6 +51,12 @@ const CreateUserController = () => {
     }
 
     const userDb = await getByUserNameOrEmail(email);
+
+    log('userDb', userDb)
+
+    if (R.isNil(userDb)) {
+      return new CredentialsError({ message: 'Invalid credentials' });
+    }
 
     const isPasswordCorrect = await compare(password, userDb.password);
 
