@@ -1,6 +1,8 @@
 import R from 'ramda';
 import request from 'request';
 import CrateClockingItRepository from './Repository';
+import { getAll } from '../core';
+
 
 const task = '6363318';
 const Cookie = 'cit_s_id=d610a848fc6915706f38e24bfd0ff9d8';
@@ -53,11 +55,10 @@ const CreateClockingItController = () => {
 
   const getLogs = async () => {
     const {
-      getAllLogs,
+      LogCollection,
     } = await CrateClockingItRepository();
 
-    const logDb = await getAllLogs();
-    return logDb;
+    return getAll(LogCollection);
   };
 
   return { createLog, getLogs };

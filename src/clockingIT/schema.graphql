@@ -1,9 +1,30 @@
-type Query {
-  clockingItLog(id: ID!): ClockingItLog
-  clockingItLogs: [ClockingItLog]
+
+type ClockingItLogEdge implements Edge {
+  cursor: String!
+  node: ClockingItLog
 }
 
-type ClockingItLog { 
+type ClockingItLogConnection implements Connection {
+  edges: [ClockingItLogEdge]
+  nodes: [ClockingItLog]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type Query {
+  clockingItLog(id: ID!): ClockingItLog
+  clockingItLogs(    
+    search: String,
+    first: Int,
+    after: String,
+    last: Int,
+    before: String,
+    orderBy: BaseOrder
+  ): ClockingItLogConnection
+}
+
+type ClockingItLog implements Node { 
+  id: ID!,
   duration: String!,
   startedAt: String!,
   body: String!,

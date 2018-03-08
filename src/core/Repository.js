@@ -16,10 +16,16 @@ const getConnectedDb = () =>
 const getCollection = collectionName =>
   getConnectedDb().then(db => db.collection(collectionName));
 
+const handleEntityId = entity => R.merge(entity, {
+  id: entity.id || shortid.generate()
+})
+
 const save = R.curry(async (collection, entity) => {
+  const entityWithId = handleEntityId(entity)
+  
   const result = await collection.replaceOne(
-    { _id: entity.id || shortid.generate() },
-    entity, { upsert: true },
+    { _id: entityWithId.id },
+    entityWithId, { upsert: true },
   );
 
   return result.ops[0];
@@ -28,6 +34,8 @@ const save = R.curry(async (collection, entity) => {
 const find = (collection) => (query, options) =>
   collection.find(query, options).toArray();
 
+const findAll = (collection) =>
+  collection.find();
 
 export {
   getConnection,
@@ -35,4 +43,5 @@ export {
   getCollection,
   save,
   find,
+  findAll,
 };
