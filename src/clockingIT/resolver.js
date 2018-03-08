@@ -33,6 +33,11 @@ const resolvers = {
 
       return createLog(saveLogArgs);
     },
+    syncClockingItLog: (root, args) => {
+      const { syncLog } = ClockingItController;
+
+      return syncLog(args.log);
+    },
   },
 };
 

@@ -6,7 +6,7 @@ import { getAll } from '../core';
 
 const task = '6363318';
 const Cookie = 'cit_s_id=d610a848fc6915706f38e24bfd0ff9d8';
-const taskBaseUrl = 'http://ewti.clockingit.com/tasks';
+const taskBaseUrl = 'aaahttp://ewti.clockingit.com/tasks';
 const headers = { Cookie };
 
 const getLogCodeOptions = {
@@ -19,7 +19,7 @@ const createLogForm = log => ({
   body: log.body,
 });
 
-const saveLogOptions = code => ({
+const saveLogOptions = ({ code, log }) => ({
   url: `${taskBaseUrl}/save_log/${code}`,
   headers,
   form: {
@@ -30,6 +30,29 @@ const saveLogOptions = code => ({
     }
   }
 });
+
+const saveLogCallback = (error, response, body) => {
+  console.log('Done hacking!!!')
+  if (!error && response.statusCode == 302) {
+    return console.log('Entry log saved!!!')
+  }
+  return console.log('Error saving log', error);
+}
+
+const getCodeCallback = (error, response, body) => {
+  console.log('response', response);
+  if (!error && response.statusCode == 200) {
+    const codeInit = body.search('destroy_log/')
+
+    const code = body.slice(codeInit + 12, codeInit + 20)
+    console.log('saveLogCallback', saveLogOptions({ code }));
+    return console.log('code', code);
+    // return request.post(saveLogOptions(code), saveLogCallback)
+  }
+  return console.log('Error getting code', error);
+}
+
+// request(getLogCodeOptions, getCodeCallback);
 
 const CreateClockingItController = () => {
   const createLog = async log => {
@@ -52,6 +75,14 @@ const CreateClockingItController = () => {
     return { saveSuccess };
   };
 
+  const syncLog = async log => {
+
+    const logToSave = createLogForm(log)
+    console.log('createLogForm', logToSave);
+
+    return { saveSuccess: true };
+  }
+
   const getLogs = async (query = {}, options) => {
     const {
       LogCollection,
@@ -59,7 +90,7 @@ const CreateClockingItController = () => {
     return getAll(LogCollection)({ query, options });
   };
 
-  return { createLog, getLogs };
+  return { createLog, getLogs, syncLog };
 };
 
 export default CreateClockingItController;
