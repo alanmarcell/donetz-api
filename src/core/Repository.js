@@ -31,10 +31,10 @@ const save = R.curry(async (collection, entity) => {
   return result.ops[0];
 });
 
-const find = (collection) => (query, options) =>
-  collection.find(query, options).toArray();
+const findOne = (collection) => (query, options) =>
+  collection.findOne(query, options);
 
-const findAll = (collection) => (query, options) =>
+const find = (collection) => (query, options) =>
   collection.find(query, options);
 
 export {
@@ -43,5 +43,5 @@ export {
   getCollection,
   save,
   find,
-  findAll,
+  findOne,
 };

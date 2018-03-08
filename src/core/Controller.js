@@ -27,12 +27,22 @@ const handleLimit = options => {
 
 const getAll = (collection) => async ({ query, options = {} }) => {
   const newOptions = handleLimit(options);  
-  const repositoryRes = await Repository.findAll(collection)(query, newOptions);
+  const repositoryRes = await Repository.find(collection)(query, newOptions);
 
   const nodes = await repositoryRes.toArray();
 
   const totalCount = await repositoryRes.count();
   return makeCursor({ nodes, totalCount });
+};
+
+const get = (collection) => async ({ query, options = {} }) => {
+  const newOptions = handleLimit(options);  
+  const repositoryRes = await Repository.find(collection)(query, newOptions);
+
+  const nodes = await repositoryRes.toArray();
+
+  const totalCount = await repositoryRes.count();
+  return nodes;
 };
 
 const create = async (collection, entity) => {
@@ -41,4 +51,4 @@ const create = async (collection, entity) => {
   return repositoryRes;
 };
 
-export { create, getAll };
+export { create, getAll, get };
