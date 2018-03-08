@@ -5,9 +5,7 @@ const ClockingItController = CreateClockingItController();
 
 const resolvers = {
   Query: {
-    clockingItLogs: (root, { ...paging }, context) => {
-      console.log('pagging', paging)
-      console.log('context', context)
+    clockingItLogs: (root, { ...paging }, context) => {      
       const { getLogs } = ClockingItController;
       return getLogs(null, paging);
     },
@@ -18,6 +16,15 @@ const resolvers = {
   },
   Mutation: {
     createClockingItLog: (root, args) => {
+      const { createLog } = ClockingItController;
+
+      const saveLogArgs = R.merge({
+        createdBy: 'self',
+      }, args.log);
+
+      return createLog(saveLogArgs);
+    },
+    updateClockingItLog: (root, args) => {
       const { createLog } = ClockingItController;
 
       const saveLogArgs = R.merge({

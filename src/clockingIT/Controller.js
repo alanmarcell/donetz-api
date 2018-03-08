@@ -37,28 +37,25 @@ const CreateClockingItController = () => {
       saveLog,
     } = await CrateClockingItRepository();
 
-    const logDb = await saveLog(log);
+    const saveSuccess = await saveLog({ saveSuccess: true, ...log });
 
-    const saveDbSuccess = R.equals(logDb, log);
 
-    if (saveDbSuccess) {
+    if (saveSuccess) {
 
       // IF SAVE SUCCESS SUBMIT REPORT TO CLOCKING IT
 
-      console.log('SAVEDB SUCCESS', log);
+      console.log('SAVEDB SUCCESS', saveSuccess);
       // request(getLogCodeOptions, console.log);
 
     }
 
-    return { syncSuccess: true };
+    return { saveSuccess };
   };
 
   const getLogs = async (query = {}, options) => {
     const {
       LogCollection,
     } = await CrateClockingItRepository();
-    console.log('============options query ', query)
-    console.log('============options ', options)
     return getAll(LogCollection)({ query, options });
   };
 

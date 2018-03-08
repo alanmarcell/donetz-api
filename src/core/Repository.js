@@ -17,18 +17,18 @@ const getCollection = collectionName =>
   getConnectedDb().then(db => db.collection(collectionName));
 
 const handleEntityId = entity => R.merge(entity, {
-  id: entity.id || shortid.generate()
-})
+  id: entity.id || shortid.generate(),
+});
 
 const save = R.curry(async (collection, entity) => {
-  const entityWithId = handleEntityId(entity)
+  const entityWithId = handleEntityId(entity);
 
-  const result = await collection.replaceOne(
+  const result = await collection.update(
     { _id: entityWithId.id },
-    entityWithId, { upsert: true },
+    { $set: entityWithId }, { upsert: true },
   );
 
-  return result.ops[0];
+  return result.result.ok;
 });
 
 const findOne = (collection) => (query, options) =>

@@ -29,15 +29,22 @@ type ClockingItLog implements Node {
   startedAt: String!,
   body: String!,
   lastSync: String,
-  syncSuccess: Boolean
+  saveSuccess: Boolean
 }
 
 # type Session {
 #   token: String!
 # }
 
-type CreateClockingItLogPayload {
- syncSuccess: Boolean!
+type SaveClockingItLogPayload {
+ saveSuccess: Boolean!
+}
+
+input ClockingItLogInput {
+  id: ID!
+  duration: String,
+  startedAt: String,
+  body: String,
 }
 
 input CreateClockingItLogInput {
@@ -48,5 +55,6 @@ input CreateClockingItLogInput {
 }
 
 type Mutation {
-  createClockingItLog(log: CreateClockingItLogInput): CreateClockingItLogPayload!
+  createClockingItLog(log: CreateClockingItLogInput): SaveClockingItLogPayload!
+  updateClockingItLog(log: ClockingItLogInput): SaveClockingItLogPayload!
 }
