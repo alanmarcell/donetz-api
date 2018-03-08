@@ -1,6 +1,7 @@
 import {
   getCollection,
   save,
+  find,
 } from '../core';
 
 const getLogCollection = getCollection('clocking_it');
@@ -10,8 +11,11 @@ const CrateClockingItRepository = async () => {
 
   const saveLog = save(LogCollection);
 
+  const getAllLogs = find(LogCollection)
+
   return {
     saveLog,
+    getAllLogs,
   };
 };
 export default CrateClockingItRepository;

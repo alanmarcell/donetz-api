@@ -25,9 +25,14 @@ const save = R.curry(async (collection, entity) => {
   return result.ops[0];
 });
 
+const find = (collection) => (query, options) =>
+  collection.find(query, options).toArray();
+
+
 export {
   getConnection,
   getConnectedDb,
   getCollection,
   save,
+  find,
 };

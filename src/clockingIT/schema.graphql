@@ -1,6 +1,8 @@
 type Query {
+  clockingItLog(id: ID!): ClockingItLog
   clockingItLogs: [ClockingItLog]
 }
+
 type ClockingItLog { 
   duration: String!,
   startedAt: String!,
