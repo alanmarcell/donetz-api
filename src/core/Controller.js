@@ -1,4 +1,4 @@
-import { map, isEmpty, last, head } from 'ramda';
+import { map, isEmpty, last, head, omit, merge } from 'ramda';
 import * as Repository from './Repository';
 
 const generateEdges = (data, skiped) =>
@@ -21,9 +21,16 @@ const makeCursor = ({
   };
 };
 
-const getAll = async (collection) => {
-  const repositoryRes = await Repository.findAll(collection);
+const handleLimit = options => {
+  return options.first ? merge(omit(['first'], options), { limit: options.first }) : options;
+};
+
+const getAll = (collection) => async ({ query, options = {} }) => {
+  const newOptions = handleLimit(options);  
+  const repositoryRes = await Repository.findAll(collection)(query, newOptions);
+
   const nodes = await repositoryRes.toArray();
+
   const totalCount = await repositoryRes.count();
   return makeCursor({ nodes, totalCount });
 };
@@ -34,6 +41,4 @@ const create = async (collection, entity) => {
   return repositoryRes;
 };
 
-
 export { create, getAll };
-

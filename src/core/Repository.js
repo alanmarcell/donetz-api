@@ -22,7 +22,7 @@ const handleEntityId = entity => R.merge(entity, {
 
 const save = R.curry(async (collection, entity) => {
   const entityWithId = handleEntityId(entity)
-  
+
   const result = await collection.replaceOne(
     { _id: entityWithId.id },
     entityWithId, { upsert: true },
@@ -34,8 +34,8 @@ const save = R.curry(async (collection, entity) => {
 const find = (collection) => (query, options) =>
   collection.find(query, options).toArray();
 
-const findAll = (collection) =>
-  collection.find();
+const findAll = (collection) => (query, options) =>
+  collection.find(query, options);
 
 export {
   getConnection,

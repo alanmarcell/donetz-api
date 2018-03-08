@@ -5,9 +5,11 @@ const ClockingItController = CreateClockingItController();
 
 const resolvers = {
   Query: {
-    clockingItLogs: () => {
+    clockingItLogs: (root, { ...paging }, context) => {
+      console.log('pagging', paging)
+      console.log('context', context)
       const { getLogs } = ClockingItController;
-      return getLogs();
+      return getLogs(null, paging);
     },
     // plants: baseResolver.createResolver((root, paging, context) => {
     //   const plantController = new PlantController(context);

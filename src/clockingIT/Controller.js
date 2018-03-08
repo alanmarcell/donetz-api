@@ -53,12 +53,13 @@ const CreateClockingItController = () => {
     return { syncSuccess: true };
   };
 
-  const getLogs = async () => {
+  const getLogs = async (query = {}, options) => {
     const {
       LogCollection,
     } = await CrateClockingItRepository();
-
-    return getAll(LogCollection);
+    console.log('============options query ', query)
+    console.log('============options ', options)
+    return getAll(LogCollection)({ query, options });
   };
 
   return { createLog, getLogs };
