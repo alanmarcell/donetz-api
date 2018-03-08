@@ -5,7 +5,12 @@ import { Engine } from 'apollo-engine';
 // import UserApp from 'ptz-user-app';
 import config from './config';
 
-import { resolvers } from './users/resolver';
+import resolvers from './graphql/resolvers';
+
+import logger from 'ptz-log';
+
+
+console.log('resolvers', resolvers)
 
 import typeDefs from './graphql/typeDefs';
 

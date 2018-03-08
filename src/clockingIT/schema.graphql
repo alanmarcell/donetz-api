@@ -1,0 +1,29 @@
+type Query {
+  clockingItLogs: [ClockingItLog]
+}
+type ClockingItLog { 
+  duration: String!,
+  startedAt: String!,
+  body: String!,
+  lastSync: String,
+  syncSuccess: Boolean
+}
+
+# type Session {
+#   token: String!
+# }
+
+type CreateClockingItLogPayload {
+ syncSuccess: Boolean!
+}
+
+input CreateClockingItLogInput {
+  id: ID
+  duration: String!,
+  startedAt: String!,
+  body: String!,
+}
+
+type Mutation {
+  createClockingItLog(log: CreateClockingItLogInput): CreateClockingItLogPayload!
+}

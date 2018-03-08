@@ -18,6 +18,7 @@
     "apollo-server-hapi": "^1.3.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^4.0.0",
+    "glob": "^7.1.2",
     "graphql": "^0.13.1",
     "graphql-tools": "^2.18.0",
     "hapi": "^17.2.0",

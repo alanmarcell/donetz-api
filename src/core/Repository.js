@@ -1,4 +1,5 @@
 import R from 'ramda';
+import shortid from 'shortid';
 import { MongoClient } from 'mongodb';
 import config from '../config';
 
@@ -17,7 +18,7 @@ const getCollection = collectionName =>
 
 const save = R.curry(async (collection, entity) => {
   const result = await collection.replaceOne(
-    { _id: entity.id },
+    { _id: entity.id || shortid.generate() },
     entity, { upsert: true },
   );
 
