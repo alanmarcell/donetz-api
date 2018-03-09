@@ -27,31 +27,31 @@ const saveLogOptions = ({ code, log }) => ({
     commit: 'Save',
     log,
     task: {
-      status: 1
-    }
-  }
+      status: 1,
+    },
+  },
 });
 
 const saveLogCallback = (error, response, body) => {
-  console.log('Done hacking!!!')
+  console.log('Done hacking!!!');
   if (!error && response.statusCode == 302) {
-    return console.log('Entry log saved!!!')
+    return console.log('Entry log saved!!!');
   }
   return console.log('Error saving log', error);
-}
+};
 
 const getCodeCallback = (error, response, body) => {
   console.log('response', response);
   if (!error && response.statusCode == 200) {
-    const codeInit = body.search('destroy_log/')
+    const codeInit = body.search('destroy_log/');
 
-    const code = body.slice(codeInit + 12, codeInit + 20)
+    const code = body.slice(codeInit + 12, codeInit + 20);
     console.log('saveLogCallback', saveLogOptions({ code }));
     return console.log('code', code);
     // return request.post(saveLogOptions(code), saveLogCallback)
   }
   return console.log('Error getting code', error);
-}
+};
 
 // request(getLogCodeOptions, getCodeCallback);
 
@@ -78,11 +78,11 @@ const CreateClockingItController = () => {
 
   const syncLog = async log => {
 
-    const logToSave = createLogForm(log)
+    const logToSave = createLogForm(log);
     console.log('createLogForm', logToSave);
 
     return { saveSuccess: true };
-  }
+  };
 
   const getLogs = async (query = {}, options) => {
     const {
@@ -97,18 +97,23 @@ const CreateClockingItController = () => {
     } = await CrateClockingItRepository();
 
 
-    const { startedAt } = query
-    console.log(' ==== startedAt', startedAt);
+    const getDates = (startDate) => {
+      const dates = R.map(a =>
+        R.clone(startDate).add(a, 'days').format('YYYY-MM-DD'), R.range(0, 6));
+      return dates;
+    };
 
-    const weekOfYear = moment(startedAt).week()
-    console.log(' ==== weekOfYear', weekOfYear);
+    const { startedAt } = query;
 
-    const weekLog = await get(LogCollection)({ query, options });
+    const weekOfYear = moment(startedAt);
+    const startOfWeek = R.clone(weekOfYear.startOf('week'));
+    const datesIn = R.merge(query, {
+      startedAt: getDates(startOfWeek),
+    });
 
-    const week = await weekLog.toArray();
+    const weekRangLog = await get(LogCollection)({ query: datesIn, options });
 
-
-    console.log(' ==== week', week);
+    const week = await weekRangLog.toArray();
     return week;
   };
 

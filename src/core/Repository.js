@@ -58,8 +58,10 @@ const bulkSave = R.curry(async (collection, entity) => {
 const findOne = (collection) => (query, options) =>
   collection.findOne(query, options);
 
-const find = (collection) => (query, options) =>
-  collection.find(query, options);
+const find = (collection) => (query, options) => {
+  console.log('query find', query)
+  return collection.find(query, options);
+}
 
 const search = (collection) => (props) =>
   collection.find(...props);

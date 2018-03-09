@@ -1,4 +1,4 @@
-import { curry, map, isEmpty, last, head, omit, merge } from 'ramda';
+import { is, map, isEmpty, last, head, omit, merge } from 'ramda';
 import * as Repository from './Repository';
 
 const generateEdges = (data, skiped) =>
@@ -28,7 +28,22 @@ const handleLimit = options => {
   return options.first ? merge(omit(['first'], options), { limit: options.first }) : options;
 };
 
-const handleRegex = (query = {}) => map(q => ({ $regex: q, $options: 'i' }), query);
+const handleRegex = (query = {}) => map(q => {
+  console.log('IS ARRAI Q', q)
+  if (is(Array, q)) {
+
+    // const regex = new RegExp("ReGeX" + testVar + "ReGeX");
+    // string.replace(regex, "replacement");
+
+    const qReg = map(i => new RegExp(i), q)
+
+    console.log(' qReg ===========', qReg)
+
+    return { $in: qReg };
+  }
+
+  return { $regex: q, $options: 'i' };
+}, query);
 
 const dbQueryBuilder = ({ query = {}, options = {} }) =>
   ({ query: handleRegex(query), options: handleLimit(options) });
@@ -56,14 +71,16 @@ const getAllWithNode = collection => async props => makeCursor(await getAll(coll
 
 const get = collection => async ({ query = {}, options = {} }) => {
   const newOptions = handleLimit(options);
+
+  console.log('=== query ===', query)
   const newQuery = handleRegex(query);
 
   console.log('newOptions', newOptions)
   console.log('newQuery', newQuery)
 
-  const ar = dbQueryBuilder({ query, options })
+  // const ar = dbQueryBuilder({ query, options })
 
-  console.log('ARR ', ar)
+  // console.log('ARR ', ar)
   const repositoryRes = await Repository.find(collection)(newQuery, newOptions);
   const nodes = await repositoryRes;
   return nodes;
