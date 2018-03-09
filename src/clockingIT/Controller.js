@@ -1,5 +1,6 @@
 import R from 'ramda';
 import request from 'request';
+import moment from 'moment';
 import CrateClockingItRepository from './Repository';
 import { getAll, get } from '../core';
 
@@ -94,11 +95,20 @@ const CreateClockingItController = () => {
     const {
       LogCollection,
     } = await CrateClockingItRepository();
+
+
+    const { startedAt } = query
+    console.log(' ==== startedAt', startedAt);
+
+    const weekOfYear = moment(startedAt).week()
+    console.log(' ==== weekOfYear', weekOfYear);
+
     const weekLog = await get(LogCollection)({ query, options });
 
     const week = await weekLog.toArray();
-    console.log(' ==== week', week);
 
+
+    console.log(' ==== week', week);
     return week;
   };
 

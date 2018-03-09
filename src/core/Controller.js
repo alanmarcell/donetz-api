@@ -64,7 +64,7 @@ const get = collection => async ({ query = {}, options = {} }) => {
   const ar = dbQueryBuilder({ query, options })
 
   console.log('ARR ', ar)
-  const repositoryRes = await Repository.search(collection)(dbQueryBuilder({ query, options }));
+  const repositoryRes = await Repository.find(collection)(newQuery, newOptions);
   const nodes = await repositoryRes;
   return nodes;
 };

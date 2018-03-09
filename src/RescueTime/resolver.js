@@ -5,10 +5,10 @@ const ClockingItController = CreateRescueTimeController();
 
 const resolvers = {
   Query: {
-    rescueTimeDailyReports: async (root, { ...paging }, _context) => {
+    rescueTimeDailyReports: async (root,args, _context) => {
       const { getRescueTimeDailyReports } = ClockingItController;
 
-      const report = await getRescueTimeDailyReports(null, paging);
+      const report = await getRescueTimeDailyReports(args);
 
       return report;
     },
