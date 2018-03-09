@@ -5,36 +5,36 @@ const ClockingItController = CreateRescueTimeController();
 
 const resolvers = {
   Query: {
-    rescueTimeDailyReports: async (root, { ...paging }, context) => {
-      console.log('pagging', paging)
+    rescueTimeDailyReports: async (root, { ...paging }, _context) => {
       const { getRescueTimeDailyReports } = ClockingItController;
 
-      const report = await getRescueTimeDailyReports(null, paging)
-      console.log('report', report)
+      const report = await getRescueTimeDailyReports(null, paging);
+
       return report;
     },
-    rescueTimeDailyReport: async (root,args, context) => {
-      console.log('pagging', args)
+    rescueTimeDailyReport: async (root, args, _context) => {
+
       const { getRescueTimeDailyReport } = ClockingItController;
 
-      const report = await getRescueTimeDailyReport(args)
-      console.log('report', report)
+      const report = await getRescueTimeDailyReport(args);
+      // console.log('REPORT\n\n', report, '\n\n')
       return report;
     },
-    // plants: baseResolver.createResolver((root, paging, context) => {
-    //   const plantController = new PlantController(context);
-    //   return plantController.getAll(null, paging);
-    // }),
-  },
-  Mutation: {
-    createClockingItLog: (root, args) => {
-      const { createLog } = ClockingItController;
+    rescueTimeActivity: async (root, args, _context) => {
 
-      const saveLogArgs = R.merge({
-        createdBy: 'self',
-      }, args.log);
+      const { getRescueTimeDailyReport } = ClockingItController;
 
-      return createLog(saveLogArgs);
+      const report = await getRescueTimeDailyReport(args);
+      // console.log('REPORT\n\n', report, '\n\n')
+      return report;
+    },
+    rescueTimeActivities: async (root, args, _context) => {
+
+      const { getRescueTimeActivities } = ClockingItController;
+
+      const report = await getRescueTimeActivities(args);
+      // console.log('REPORT\n\n', report, '\n\n')
+      return report;
     },
   },
 };

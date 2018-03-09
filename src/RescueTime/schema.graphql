@@ -11,7 +11,21 @@ type RescueTimeDailyReportConnection implements Connection {
   totalCount: Int!
 }
 
+type RescueTimeActivityEdge implements Edge {
+  cursor: String!
+  node: RescueTimeActivity
+}
+
+type RescueTimeActivityConnection implements Connection {
+  edges: [RescueTimeActivityEdge]
+  nodes: [RescueTimeActivity]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Query {
+  rescueTimeActivity(id: ID): RescueTimeActivity
+  rescueTimeActivities(date: String): RescueTimeActivityConnection
   rescueTimeDailyReport(id: ID, date: String): RescueTimeDailyReport
   rescueTimeDailyReports(    
     search: String,
@@ -23,7 +37,8 @@ type Query {
   ): RescueTimeDailyReportConnection
 }
 
-type RescueTimeActivity {
+type RescueTimeActivity implements Node {
+  id: ID!,
   date: String,
   timeSpent: Int,
   activity: String,
