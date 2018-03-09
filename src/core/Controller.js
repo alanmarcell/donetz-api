@@ -28,6 +28,11 @@ const handleLimit = options => {
   return options.first ? merge(omit(['first'], options), { limit: options.first }) : options;
 };
 
+const handleRegex = (query = {}) => map(q => ({ $regex: q, $options: 'i' }), query);
+
+const dbQueryBuilder = ({ query = {}, options = {} }) =>
+  ({ query: handleRegex(query), options: handleLimit(options) });
+
 const search = collection => async (query = {}, options = {}) => {
   const repositoryRes = await Repository.find(collection)(Repository.dbQueryBuilder({ query, options }));
   const nodes = await repositoryRes;
@@ -36,7 +41,9 @@ const search = collection => async (query = {}, options = {}) => {
 
 
 const getAll = (collection) => async ({ query, options = {} }) => {
-  const newOptions = handleLimit(options);  
+  const newOptions = handleLimit(options);
+  console.log('QUERY', query)
+  console.log('newOptions', newOptions)
   const repositoryRes = await Repository.find(collection)(query, newOptions);
 
   const nodes = await repositoryRes.toArray();
@@ -47,8 +54,17 @@ const getAll = (collection) => async ({ query, options = {} }) => {
 
 const getAllWithNode = collection => async props => makeCursor(await getAll(collection, ...props));
 
-const get = collection => async (query = {}, options = {}) => {
-  const repositoryRes = await Repository.find(collection)(Repository.dbQueryBuilder({ query, options }));
+const get = collection => async ({ query = {}, options = {} }) => {
+  const newOptions = handleLimit(options);
+  const newQuery = handleRegex(query);
+
+  console.log('newOptions', newOptions)
+  console.log('newQuery', newQuery)
+
+  const ar = dbQueryBuilder({ query, options })
+
+  console.log('ARR ', ar)
+  const repositoryRes = await Repository.search(collection)(dbQueryBuilder({ query, options }));
   const nodes = await repositoryRes;
   return nodes;
 };

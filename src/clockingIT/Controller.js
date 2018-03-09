@@ -1,7 +1,7 @@
 import R from 'ramda';
 import request from 'request';
 import CrateClockingItRepository from './Repository';
-import { getAll } from '../core';
+import { getAll, get } from '../core';
 
 
 const task = '6363318';
@@ -90,7 +90,19 @@ const CreateClockingItController = () => {
     return getAll(LogCollection)({ query, options });
   };
 
-  return { createLog, getLogs, syncLog };
+  const getWeekLog = async (query = {}, options) => {
+    const {
+      LogCollection,
+    } = await CrateClockingItRepository();
+    const weekLog = await get(LogCollection)({ query, options });
+
+    const week = await weekLog.toArray();
+    console.log(' ==== week', week);
+
+    return week;
+  };
+
+  return { createLog, getLogs, getWeekLog, syncLog };
 };
 
 export default CreateClockingItController;

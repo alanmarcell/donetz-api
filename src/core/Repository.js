@@ -61,6 +61,9 @@ const findOne = (collection) => (query, options) =>
 const find = (collection) => (query, options) =>
   collection.find(query, options);
 
+const search = (collection) => (props) =>
+  collection.find(...props);
+
 export {
   dbQueryBuilder,
   bulkSave,
@@ -70,4 +73,5 @@ export {
   save,
   find,
   findOne,
+  search,
 };
