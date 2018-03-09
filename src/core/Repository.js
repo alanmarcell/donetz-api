@@ -5,6 +5,15 @@ import config from '../config';
 
 const { dbName, host } = config.database;
 
+const handleLimit = options => {
+  return options.first ? R.merge(R.omit(['first'], options), { limit: options.first }) : options;
+};
+
+const handleRegex = (query = {}) => R.map(q => ({ $regex: q, $options: 'i' }), query);
+
+const dbQueryBuilder = ({ query = {}, options = {} }) =>
+  ({ query: handleRegex(query), options: handleLimit(options) });
+
 const getConnection = async () => MongoClient.connect(host);
 
 const getDb = connection => connection.db(dbName);
@@ -31,6 +40,21 @@ const save = R.curry(async (collection, entity) => {
   return result.result.ok;
 });
 
+const bulkSave = R.curry(async (collection, entity) => {
+  const entityWithId = entity.map(handleEntityId);
+
+  const bulk = R.map(e => ({
+    updateOne: {
+      filter: { _id: e.id },
+      update: { $set: e },
+      upsert: true,
+    },
+  }), entityWithId);
+
+  const result = await collection.bulkWrite(bulk);
+  return result.ok;
+});
+
 const findOne = (collection) => (query, options) =>
   collection.findOne(query, options);
 
@@ -38,6 +62,8 @@ const find = (collection) => (query, options) =>
   collection.find(query, options);
 
 export {
+  dbQueryBuilder,
+  bulkSave,
   getConnection,
   getConnectedDb,
   getCollection,
