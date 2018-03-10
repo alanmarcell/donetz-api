@@ -13,7 +13,7 @@ type ClockingItLogConnection implements Connection {
 
 type Query {
   clockingItLog(id: ID!): ClockingItLog
-  clockingWeekLog(startedAt: String!): [ClockingItLog]
+  clockingWeekLog(startedAt: String): [ClockingItLog]
   clockingItLogs(    
     search: String,
     first: Int,

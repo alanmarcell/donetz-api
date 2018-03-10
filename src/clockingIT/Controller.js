@@ -104,8 +104,7 @@ const CreateClockingItController = () => {
     };
 
     const { startedAt } = query;
-
-    const weekOfYear = moment(startedAt);
+    const weekOfYear = R.isNil(startedAt) ? moment() : moment(startedAt);
     const startOfWeek = R.clone(weekOfYear.startOf('week'));
     const datesIn = R.merge(query, {
       startedAt: getDates(startOfWeek),
