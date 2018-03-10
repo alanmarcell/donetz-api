@@ -1,27 +1,62 @@
 import R from 'ramda';
-import request from 'request';
+import request from 'request-promise-native';
 import moment from 'moment';
 import CrateClockingItRepository from './Repository';
 import { getAll, get } from '../core';
 
-
 const task = '6363318';
 const Cookie = 'cit_s_id=d610a848fc6915706f38e24bfd0ff9d8';
-const taskBaseUrl = 'aaahttp://ewti.clockingit.com/tasks';
+const taskBaseUrl = 'http://ewti.clockingit.com/tasks';
 const headers = { Cookie };
 
-const getLogCodeOptions = {
-  url: `${taskBaseUrl}/add_work/${task}`,
-  headers,
+const getTaskCode = taskType => {
+  switch (taskType) {
+    case 'NEW_FEATURES':
+      return '6363318';
+
+
+    default:
+      break;
+  }
 };
+
+const getAddWorkOptions = taskType => ({
+  uri: `${taskBaseUrl}/add_work/${getTaskCode(taskType)}`,
+  headers,
+});
+
+const findCodeOnBody = body => {
+  const codeInit = body.search('destroy_log/');
+  const code = body.slice(codeInit + 12, codeInit + 20);
+  return code;
+};
+
+const addClockingWork = async (taskType) => {
+  const res = await request(getAddWorkOptions(taskType));
+
+  const code = findCodeOnBody(res);
+
+  return code;
+};
+
+const submitLog = async (logOptions) => {
+  try {
+    const res = await request(logOptions);
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 const createLogForm = log => ({
   duration: log.duration,
-  started_at: log.startedAt,
+  started_at: moment(log.startedAt).format('DD/MM/YYYY H:mm'),
   body: log.body,
 });
 
-const saveLogOptions = ({ code, log }) => ({
-  url: `${taskBaseUrl}/save_log/${code}`,
+const getSaveLogOptions = ({ code, log }) => ({
+  uri: `${taskBaseUrl}/save_log/${code}`,
   headers,
   form: {
     commit: 'Save',
@@ -30,6 +65,7 @@ const saveLogOptions = ({ code, log }) => ({
       status: 1,
     },
   },
+  resolveWithFullResponse: true,
 });
 
 const saveLogCallback = (error, response, body) => {
@@ -46,7 +82,7 @@ const getCodeCallback = (error, response, body) => {
     const codeInit = body.search('destroy_log/');
 
     const code = body.slice(codeInit + 12, codeInit + 20);
-    console.log('saveLogCallback', saveLogOptions({ code }));
+    console.log('saveLogCallback', getSaveLogOptions({ code }));
     return console.log('code', code);
     // return request.post(saveLogOptions(code), saveLogCallback)
   }
@@ -77,11 +113,13 @@ const CreateClockingItController = () => {
   };
 
   const syncLog = async log => {
-
     const logToSave = createLogForm(log);
-    console.log('createLogForm', logToSave);
+    const addWorkOptions = await addClockingWork(log.activity);
+    const saveLogOptions = getSaveLogOptions({ log: logToSave, code: addWorkOptions });
 
-    return { saveSuccess: true };
+    const logRes = submitLog(saveLogOptions);
+    // TODO SAVE LAST SYNC
+    return { saveSuccess: logRes };
   };
 
   const getLogs = async (query = {}, options) => {

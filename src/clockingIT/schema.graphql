@@ -1,4 +1,7 @@
-
+enum Clockingtask {
+  NEW_FEATURES
+  MEETING
+}
 type ClockingItLogEdge implements Edge {
   cursor: String!
   node: ClockingItLog
@@ -29,6 +32,7 @@ type ClockingItLog implements Node {
   duration: String!,
   startedAt: Date!,
   body: String!,
+  activity: Clockingtask,
   lastSync: String,
   saveSuccess: Boolean
 }
@@ -43,6 +47,7 @@ type SaveClockingItLogPayload {
 
 input ClockingItLogInput {
   id: ID!
+  activity: Clockingtask,
   duration: String,
   startedAt: Date,
   body: String,
@@ -50,6 +55,7 @@ input ClockingItLogInput {
 
 input CreateClockingItLogInput {
   id: ID
+  activity: Clockingtask!,
   duration: String!,
   startedAt: Date!,
   body: String!,
