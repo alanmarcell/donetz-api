@@ -116,12 +116,21 @@ const CreateClockingItController = () => {
   };
 
   const syncLog = async log => {
+    const {
+      saveLog,
+    } = await CrateClockingItRepository();
     const logToSave = createLogForm(log);
     const addWorkOptions = await addClockingWork(log.activity);
     const saveLogOptions = getSaveLogOptions({ log: logToSave, code: addWorkOptions });
 
     const logRes = submitLog(saveLogOptions);
-    // TODO SAVE LAST SYNC
+
+    if (logRes) {
+      const saveSuccess = await saveLog({ lastSync: moment().toDate(), ...log });
+
+      console.log('saveSuccess', saveSuccess);
+    }
+
     return { saveSuccess: logRes };
   };
 
